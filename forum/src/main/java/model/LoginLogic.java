@@ -8,11 +8,11 @@ public class LoginLogic {
 		user = dao.loginCheck(user);
 		if (user.getUserId() != null && user.getPassword() != null && user.getName() !=null) {
 			return user;
-		}else {return null;}
+		}else {
+			return null;
+		}
 		
 	}
-	
-	
 	
 	public boolean registerCheck(User user) {
 		AccountDAO dao = new AccountDAO();

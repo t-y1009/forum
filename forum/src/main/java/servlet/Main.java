@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import model.GetMutterListLogic;
+import model.LikeLogic;
 import model.Mutter;
 import model.PostMutterLogic;
 import model.User;
@@ -21,13 +22,13 @@ public class Main extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
 		GetMutterListLogic getMutterListLogic = new GetMutterListLogic();
 		List<Mutter> mutterList = getMutterListLogic.execute();
 		request.setAttribute("mutterList", mutterList);
 			//セッションスコープからユーザー情報を取得
 			HttpSession session = request.getSession();
 			User loginUser = (User)session.getAttribute("loginUser");
-			
 			//ユーザー情報が取得できる(ログインしている)ならメイン画面を表示
 			if(loginUser != null) {
 				RequestDispatcher  dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/main.jsp");
@@ -38,7 +39,7 @@ public class Main extends HttpServlet {
 	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
-		String id = request.getParameter("id");
+		int id = 0;
 		String text = request.getParameter("text");
 		String words =request.getParameter("words");
 		String flag = request.getParameter("flag");
@@ -68,6 +69,7 @@ public class Main extends HttpServlet {
 			break;
 		
 		case "3"://削除
+			id = Integer.parseInt(request.getParameter("id"));
 			mutter = new Mutter(id);
 			pml = new PostMutterLogic();
 			pml.deleteExcecute(mutter);
@@ -84,6 +86,23 @@ public class Main extends HttpServlet {
 			}
 			break;
 		
+		case "5":
+			id = Integer.parseInt(request.getParameter("id"));
+			mutter = new Mutter(id);
+			HttpSession session = request.getSession();
+			User loginUser = (User)session.getAttribute("loginUser");
+			LikeLogic likeLogic = new LikeLogic();
+			if (likeLogic.checkExecute(loginUser, mutter)) {
+				//trueならお気にいりにする
+				likeLogic.addExecute(loginUser, mutter);
+			}
+			else {
+				likeLogic.deleteExecute(loginUser, mutter);
+				//ユーザーがお気に入り済みなら消す
+			}
+			mutterList = gmll.execute();
+			break;
+			
 		default://それ以外
 			mutterList = gmll.execute();
 			

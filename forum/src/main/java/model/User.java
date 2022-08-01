@@ -3,14 +3,15 @@ package model;
 import java.io.Serializable;
 
 public class User implements Serializable {
-	private String userId;
+	private int id;
+	private String user_Id;
 	private String password;
 	private String name;
 	private int accountType;
 	
 	public User() {}
 	public User(String userId, String password) {
-		this.userId = userId;
+		this.user_Id = userId;
 		this.password = password;
 	}
 	public User(String userId, String password, String name, int accountType) {
@@ -18,8 +19,11 @@ public class User implements Serializable {
 		this.name = name;
 		this.accountType = accountType;
 	}
+	public int getId() {
+		return id;
+	}
 	public String getUserId() {
-		return userId;
+		return user_Id;
 	}
 	public String getPassword() {
 		return password;
@@ -30,8 +34,11 @@ public class User implements Serializable {
 	public int getAccountType() {
 		return accountType;
 	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	public void setUserId(String userId) {
-		this.userId = userId;
+		this.user_Id = userId;
 	}
 	public void setPassword(String password) {
 		this.password = password;

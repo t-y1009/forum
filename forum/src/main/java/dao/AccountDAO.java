@@ -43,12 +43,13 @@ public class AccountDAO {
 	public User loginCheck(User user) {
 		User returnUser = user;
 		try(Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASS)){
-			String sql = "SELECT USER_ID, PASSWORD, NAME, ACCOUNT_TYPE FROM account_list WHERE USER_ID = ? AND PASSWORD = ?";	
+			String sql = "SELECT ID, USER_ID, PASSWORD, NAME, ACCOUNT_TYPE FROM account_list WHERE USER_ID = ? AND PASSWORD = ?";	
 			PreparedStatement pStmt = conn.prepareStatement(sql);
 			pStmt.setString(1, user.getUserId());
 			pStmt.setString(2, user.getPassword());
 			ResultSet rs = pStmt.executeQuery();
 			while(rs.next()) {
+				returnUser.setId(rs.getInt("ID"));
 				returnUser.setUserId(rs.getString("USER_ID"));
 				returnUser.setPassword(rs.getString("PASSWORD"));
 				returnUser.setName(rs.getString("NAME"));

@@ -17,15 +17,17 @@ public class MutterDAO {
 	public List<Mutter> findAll(){
 		List<Mutter> mutterList = new ArrayList<>();
 		try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASS))	{
-			String sql = "SELECT ID,NAME,TEXT,DATE FROM mutter ORDER BY ID DESC";
-			PreparedStatement pStmt = conn.prepareStatement(sql);
-			ResultSet rs = pStmt.executeQuery();
+			String sql = "SELECT ID,NAME,TEXT,DATE,(SELECT count(*) FROM favorite WHERE mutter_id = mutter.id)AS FAVORITE "
+						+ "FROM mutter ORDER BY ID DESC";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				String id = rs.getString("ID");
+				int id = rs.getInt("ID");
 				String user_name = rs.getString("NAME");
 				String text = rs.getString("TEXT");
 				String date = rs.getString("DATE");
-				Mutter mutter = new Mutter(id, user_name, text, date);
+				String favorite = rs.getString("FAVORITE");
+				Mutter mutter = new Mutter(id, user_name, text, date, favorite);
 				mutterList.add(mutter);
 			}
 		} catch (SQLException e) {
@@ -38,11 +40,11 @@ public class MutterDAO {
 	public boolean create(Mutter mutter) {
 		try(Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASS)){
 			String sql = "INSERT INTO mutter(NAME, TEXT, DATE) VALUES(?, ?, now())";	
-			PreparedStatement pStmt = conn.prepareStatement(sql);
-			pStmt.setString(1, mutter.getUserName());
-			pStmt.setString(2, mutter.getText());
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, mutter.getUserName());
+			ps.setString(2, mutter.getText());
 			//更新の可否で分岐
-			int result =pStmt.executeUpdate();
+			int result =ps.executeUpdate();
 			if (result != 1) {
 				return false;
 			}
@@ -56,9 +58,9 @@ public class MutterDAO {
 	public boolean delete(Mutter mutter) {
 		try(Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASS)){
 			String sql = "DELETE FROM mutter WHERE id = ?";	
-			PreparedStatement pStmt = conn.prepareStatement(sql);
-			pStmt.setInt(1, Integer.parseInt(mutter.getId()));
-			pStmt.executeUpdate();
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setInt(1, mutter.getId());
+			ps.executeUpdate();
 		}catch (SQLException e) {
 			e.printStackTrace();
 			return false;
@@ -69,17 +71,19 @@ public class MutterDAO {
 	public List<Mutter> serch(Mutter mutter) {
 		List<Mutter> mutterList = new ArrayList<>();
 		try(Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASS)){
-			String sql = "SELECT ID, NAME, TEXT, DATE FROM mutter WHERE NAME = ? OR TEXT = ?";
-			PreparedStatement pStmt = conn.prepareStatement(sql);
-			pStmt.setString(1, mutter.getUserName());
-			pStmt.setString(2, mutter.getText());
-			ResultSet rs = pStmt.executeQuery();
+			String sql = "SELECT ID, NAME, TEXT, DATE,(SELECT count(*) FROM favorite WHERE mutter_id = mutter.id)AS FAVORITE "
+						+ "FROM mutter WHERE NAME = ? OR TEXT = ?";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, mutter.getUserName());
+			ps.setString(2, mutter.getText());
+			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				String id = rs.getString("ID");
+				int id = Integer.parseInt(rs.getString("ID"));
 				String userName = rs.getString("NAME");
 				String text = rs.getString("TEXT");
 				String date = rs.getString("DATE");
-				mutter = new Mutter(id, userName, text, date);
+				String favorite = rs.getString("FAVORITE");
+				mutter = new Mutter(id, userName, text, date,favorite);
 				mutterList.add(mutter);
 			}
 		} catch (SQLException e) {
@@ -88,4 +92,5 @@ public class MutterDAO {
 		}	
 			return mutterList;
 	}
+	
 }

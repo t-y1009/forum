@@ -33,7 +33,7 @@ public class Login extends HttpServlet {
 			User user = new User(user_id, password);
 			LoginLogic loginLogic = new LoginLogic();
 			User returnUser = loginLogic.excute(user);
-			//パスワード判定trueならセッションスコープに保存
+			//trueならセッションスコープに保存
 			if(returnUser != null) {
 				HttpSession session = request.getSession();
 				session.setAttribute("loginUser", user);

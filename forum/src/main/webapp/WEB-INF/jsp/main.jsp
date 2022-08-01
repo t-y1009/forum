@@ -70,7 +70,21 @@
 									<p class="forum_user_name">ユーザー名:<span><%= mutter.getUserName() %></span></p>
 									<p class="forum_text"> <%= mutter.getText() %> </p>
 								</div>
-								<div class="date"><p><%= mutter.getDate() %></p></div>
+								<div class="others">
+									<div class="date"><p><%= mutter.getDate() %></p></div>
+									<div class="favorite">
+										<form name="favoriteFlag" action="/forum/Main" method="post">
+											<input type="hidden" name="flag" value="5">
+											<input type="hidden" name="id" value="<%= mutter.getId()%>">
+											<input type="image" name="favorite_action" style="width:30px; height:34px;"src=<% if(mutter.getFavorite().equals("0")){ %>
+												"/forum/img/non_favorite.png"
+												<%}else{ %>
+													"/forum/img/favorite.png"
+												<% } %>>
+										</form>
+										<span class="favorite_count"><%= mutter.getFavorite() %></span>
+									</div>
+								</div>	
 							</div>
 						<% } %>
 					</div>

@@ -16,7 +16,7 @@
 				<form action="/forum/Login" method="post">
 					<div class="form-group1">
 						<label class="form-control-label">ユーザーID</label><br>
-						<input type="text" name="user_id" required class="form-control">
+						<input type="text" name="user_id" required pattern="^[a-zA-Z0-9]+$" maxlength="10" class="form-control">
 					</div>
 					<div class="form-group1">
 						<label class="form-control-label">パスワード</label><br>
