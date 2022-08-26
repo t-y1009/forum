@@ -101,7 +101,7 @@ public class Main extends HttpServlet {
 			User loginUser = (User)session.getAttribute("loginUser");
 			LikeLogic likeLogic = new LikeLogic();
 			if (likeLogic.checkExecute(loginUser, mutter)) {
-				//trueならお気にいりにする
+				//trueならお気に入りにする
 				likeLogic.addExecute(loginUser, mutter);
 			}
 			else {
