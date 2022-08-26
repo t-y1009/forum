@@ -10,9 +10,9 @@ import model.Mutter;
 import model.User;
 
 public class LikeDAO {
-	private final String JDBC_URL = "jdbc:postgresql://database-1.cphupkzcqpdm.us-west-2.rds.amazonaws.com:5432/forum_db";
-	private final String DB_USER = "postgres";
-	private final String DB_PASS = "cJQHmvzrjP9mb5JZKbiZ";
+	private final String JDBC_URL="jdbc:postgresql://34.168.81.118:5432/forum";
+	private final String DB_USER ="postgres";
+	private final String DB_PASS ="second";
 	
 	public boolean checkLike(User loginUser, Mutter mutter) {
 		try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASS))	{

@@ -30,6 +30,7 @@
 			        <span>ようこそ <%= loginUser.getName() %>さん</span>
 		        </div>
 		        <ul>
+		        	<li><a href="/forum/Main?favorite=find">お気に入り一覧</a></li>
 		            <li><a href="/forum/Logout">ログアウト</a></li>
 		        </ul>
 		    </li>

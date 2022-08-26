@@ -9,14 +9,14 @@ import java.sql.SQLException;
 import model.User;
 
 public class AccountDAO {
-	private final String JDBC_URL = "jdbc:postgresql://database-1.cphupkzcqpdm.us-west-2.rds.amazonaws.com:5432/forum_db";
-	private final String DB_USER = "postgres";
-	private final String DB_PASS = "cJQHmvzrjP9mb5JZKbiZ";
+	private final String JDBC_URL="jdbc:postgresql://34.168.81.118:5432/forum";
+	private final String DB_USER ="postgres";
+	private final String DB_PASS ="second";
 	
 	public boolean registerCheck(User user) {
 		try(Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASS)){
 			//IDもしくは名前が重複している場合は登録失敗
-			String sql1 = "SELECT USER_ID, NAME FROM account_list WHERE USER_ID = ? OR NAME = ?";
+			String sql1 = "SELECT USER_ID, NAME FROM account WHERE USER_ID = ? OR NAME = ?";
 			PreparedStatement pStmt = conn.prepareStatement(sql1);
 			pStmt.setString(1, user.getUserId());
 			pStmt.setString(2, user.getName());
@@ -25,7 +25,7 @@ public class AccountDAO {
 			if(rs.isBeforeFirst()) {
 				return false;
 			}else {
-				String sql2 = "INSERT INTO account_list (USER_ID, PASSWORD, NAME, ACCOUNT_TYPE) VALUES (?,?,?,?)";
+				String sql2 = "INSERT INTO account (USER_ID, PASSWORD, NAME, ACCOUNT_TYPE) VALUES (?,?,?,?)";
 				pStmt = conn.prepareStatement(sql2);
 					pStmt.setString(1, user.getUserId());
 					pStmt.setString(2, user.getPassword());
@@ -43,7 +43,7 @@ public class AccountDAO {
 	public User loginCheck(User user) {
 		User returnUser = user;
 		try(Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASS)){
-			String sql = "SELECT ID, USER_ID, PASSWORD, NAME, ACCOUNT_TYPE FROM account_list WHERE USER_ID = ? AND PASSWORD = ?";	
+			String sql = "SELECT ID, USER_ID, PASSWORD, NAME, ACCOUNT_TYPE FROM account WHERE USER_ID = ? AND PASSWORD = ?";	
 			PreparedStatement pStmt = conn.prepareStatement(sql);
 			pStmt.setString(1, user.getUserId());
 			pStmt.setString(2, user.getPassword());
